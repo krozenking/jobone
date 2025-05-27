@@ -1,0 +1,22 @@
+{
+  "llm_selection_strategy": {
+    "prefer_local": true,
+    "local_model": "mistral",
+    "fallback_order": [
+      "openrouter/claude-3-haiku",
+      "openrouter/command-r",
+      "google/palm-chat"
+    ]
+  },
+  "api_keys": {
+    "openrouter": "sk-your-openrouter-key",
+    "google": "AIza-your-google-key"
+  },
+  "on_failure": {
+    "return_error": true
+  },
+  "output_format": {
+    "text": true,
+    "json": false
+  }
+}

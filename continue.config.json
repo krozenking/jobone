@@ -1,0 +1,18 @@
+{
+    "models": [
+        {
+            "title": "Ollama",
+            "provider": "ollama",
+            "model": "mistral"
+        }
+    ],
+    "contextProviders": [
+        {
+            "title": "Orion Memory",
+            "class": "FileSystemContextProvider",
+            "args": {
+                "path": "./orion_vision_core/memory/orion_memory_v2.json"
+            }
+        }
+    ]
+}

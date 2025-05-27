@@ -1,0 +1,13 @@
+No	Görev	Öncelik	Süre	Açıklama	Satır Referansı (Master Plan)
+1	OCR Eklentisi	Orta	1 gün	screen_agent.py için EasyOCR	F.1
+2	Görev Arşivleme	Orta	1 gün	JSON (*.last)	B.2
+3	Terminal UI	Düşük	1 gün	Task Manager UI	H
+4	Kaynak İzleme	Düşük	1 gün	psutil, nvidia-smi	A.3
+5	Model Eğitimi	Orta	1-2 gün	train_or_finetune.py taslağı	D.3
+6	Mod Kontrolü	Orta	1 gün	runner_service.py mod seçimi	B.2
+Sıradaki Adım Stratejisi:
+
+Önceliklendirme: MoSCoW yöntemiyle “Olmazsa Olmaz” görevler (OCR, görev arşivleme, mod kontrolü) önce tamamlanacak.
+Süre: İlk sprint, 1 haftalık bir döngüde (5 iş günü) 1, 2 ve 6 numaralı görevleri hedefleyecek (toplam ~3 gün).
+CI/CD: Her görev, GitHub Actions ile otomatik test edilerek entegre edilecek.
+Risk Yönetimi: Küçük sapmalar (%80 plan uyumu) için proaktif izleme uygulanacak.
