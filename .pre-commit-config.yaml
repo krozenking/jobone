@@ -35,3 +35,10 @@ repos:
     hooks:
       - id: isort
         args: ["--profile", "black"]
+
+  - repo: https://github.com/krozenking/jobone.git
+    rev: main
+    hooks:
+      - id: jobone
+        stages: [commit, push]
+        args: []
