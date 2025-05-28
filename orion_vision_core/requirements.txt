@@ -1,11 +1,49 @@
+# Core dependencies
 virtualenv
-PyAutoGUI
-tesseract
-opencv-python
 python-dotenv
+
+# AI/ML Libraries
 transformers
 torch
 ollama
 openrouter
 bark
 openai-whisper
+
+# Computer Vision & OCR
+opencv-python
+pytesseract
+easyocr
+mss
+Pillow
+
+# Audio Processing
+scipy
+soundfile
+
+# Automation
+PyAutoGUI
+
+# Web & API
+requests
+httpx
+fastapi
+uvicorn
+
+# Development & Testing
+pytest
+pytest-cov
+pytest-asyncio
+black
+flake8
+mypy
+pre-commit
+
+# Logging & Monitoring
+structlog
+rich
+
+# Data & Utilities
+pydantic
+dataclasses-json
+typing-extensions

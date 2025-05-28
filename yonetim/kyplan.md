@@ -136,3 +136,51 @@ Yapılandırma ve Süreç: ConfigManager tutarlı davranış sağlar, Master Pla
 Bu mimari, Orion'un hem anlık operasyonel yeteneklerini hem de uzun vadeli stratejik evrimini desteklemek üzere tasarlanmıştır, böylece Kuzey Yıldızı hedeflerinize sürekli olarak ulaşmanızı sağlar.
 
 Bu mimari tasarım hakkında ek bir detaylandırma veya belirli bir katman/bileşen hakkında daha fazla bilgi isterseniz, lütfen çekinmeyin.
+
+## Stratejik Katmanlar ve Sorumluluklar Tablosu
+
+| Katman                        | Sorumluluğu                        | Temel Dosya/Bileşenler                                 |
+|-------------------------------|-------------------------------------|--------------------------------------------------------|
+| Veri ve Olay Yönetimi         | Gerçekliği yansıtmak                | log_manager.py, database_manager.py                    |
+| Ajan ve İşlem Mantığı         | Karar üretmek ve görevleri icra etmek| runner_service.py, task_manager.py, llm_router.py, query_optimizer_agent.py, ai_scheduler_agent.py |
+| Gözlem ve Etkileşim           | Duyular ve etkiler                  | screen_agent.py, terminal_logger.py, streamlit_app.py  |
+| Yapılandırma                  | Değerleri, sınırları ve protokolleri belirlemek | config.py, config_manager.py                |
+| Süreç Yönetimi                | Zaman, bekleme, rutinler            | scheduler.py, trainer.py                               |
+
+Bu tablo, her katmanın hem stratejik rolünü hem de önerilen dosya/bileşen karşılıklarını özetler.
+
+### Yeni AI Ajanlarının Stratejik Değeri
+
+- **Query_Optimization_Agent (query_optimizer_agent.py):**  
+  LLM veya ML tabanlı sorgu optimizasyonu ile veri erişimini hızlandırır ve sistemin sezgisel olarak kendi performansını artırmasını sağlar.
+
+- **AI_Scheduler_Agent (ai_scheduler_agent.py):**  
+  Zamanlama ve önceliklendirme süreçlerini optimize ederek, sistemin arka planda verimli ve akıllı şekilde çalışmasını mümkün kılar.
+
+Bu ajanlar, Orion'un sıradan görev yürüten bir sistemden, kendi iç verimini yöneten ve sürekli optimize eden bir yapay zekaya evrilmesini sağlar.
+
+### Dosya Yapısı Önerisi
+
+Aşağıda, mimarinin stratejik katmanlarına ve bileşenlerine karşılık gelen önerilen dosya yapısı yer almaktadır:
+
+```
+orion/
+│
+├── config.py
+├── config_manager.py
+├── log_manager.py
+├── database_manager.py
+├── task_manager.py
+├── runner_service.py
+├── llm_router.py
+├── query_optimizer_agent.py
+├── ai_scheduler_agent.py
+├── scheduler.py
+├── trainer.py
+├── screen_agent.py
+├── terminal_logger.py
+├── streamlit_app.py
+├── orion_api.py
+```
+
+Her dosya, yukarıdaki katman-bileşen tablosunda belirtilen stratejik sorumluluklara hizmet edecek şekilde tasarlanmalıdır.

@@ -1,6 +1,6 @@
 import logging
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from Log_Manager import setup_logging, process_log, ERROR_ARCHIVE_DIR
 from Database_Manager import DatabaseManager
 from pydantic import BaseModel
@@ -18,6 +18,9 @@ log_manager.connect()
 class TaskTrigger(BaseModel):
     task_name: str
 
+class AIPrompt(BaseModel):
+    prompt: str
+
 @app.post("/trigger_task")
 async def trigger_task(task: TaskTrigger):
     # Log_Manager veya Time_Based_Execution_Engine'a görevi tetikleme mantığı burada olacak
@@ -30,9 +33,14 @@ async def trigger_task(task: TaskTrigger):
 async def task_status(task_id: int):
     return {"status": f"Status of task {task_id}"}
 
+import time
 @app.post("/ai_service")
-async def ai_service(prompt: str):
-    return {"result": f"AI service result for prompt: {prompt}"}
+async def ai_service(ai_request: AIPrompt): # Artık AIPrompt modelini bekliyoruz
+    # Gerçek uygulamada, Query_Optimization_Agent veya AI_Root_Cause_Agent gibi bir ajana yönlendirilecek.
+    logging.info(f"AI servisi istemi alındı: {ai_request.prompt}") # ai_request.prompt olarak erişin
+    # Basit bir yanıt dönüyoruz
+    ai_response = f"AI servisi, isteminizi aldı: '{ai_request.prompt}'. Bu, gelecekte daha gelişmiş bir yanıt olacak."
+    return {"result": ai_response, "timestamp": time.time()}
 
 @app.get("/")
 async def read_root():
@@ -63,6 +71,27 @@ async def get_error_logs():
                 logging.error(f"Hata logu okunurken hata oluştu {filename}: {e}")
                 error_logs.append({"filename": filename, "error": str(e)})
     return error_logs
+
+@app.get("/database/data")
+async def get_database_data():
+    try:
+        # Gerçek Database_Manager'dan veri çekme mantığı buraya gelecek.
+        # Şu anda sadece örnek veriler döndürüyoruz.
+        # Örneğin, DatabaseManager'ınızın 'fetch_all_data' gibi bir metodu varsa:
+        # data = log_manager.fetch_all_data() # Log_Manager örneği DatabaseManager ise
+        # Veya DatabaseManager'dan başka bir instance oluşturup kullanabilirsiniz.
+
+        # Şimdilik, Database_Manager'dan çekilmiş gibi örnek veri döndürelim:
+        sample_db_data = [
+            {"id": 1, "type": "event", "description": "Sistem başlatıldı", "timestamp": "2023-10-27T10:00:01Z", "agent_id": "system"},
+            {"id": 2, "type": "log", "level": "INFO", "message": "Görev rapor_olustur tetiklendi", "timestamp": "2023-10-27T10:05:30Z", "agent_id": "streamlit"},
+            {"id": 3, "type": "telemetry", "metric": "cpu_usage", "value": 35, "timestamp": "2023-10-27T10:06:00Z", "agent_id": "agent1"},
+            {"id": 4, "type": "error", "message": "Veritabanı bağlantı hatası", "timestamp": "2023-10-27T10:07:15Z", "agent_id": "database_manager"}
+        ]
+        return {"data": sample_db_data, "message": "Veritabanı verileri başarıyla alındı."}
+    except Exception as e:
+        logging.error(f"Veritabanı verileri alınırken hata oluştu: {e}")
+        raise HTTPException(status_code=500, detail=f"Veritabanı verileri alınamadı: {str(e)}")
 
 from Agent_Telemetry_Injector import AgentTelemetryInjector
 from Environment_Monitoring_Agent import EnvironmentMonitoringAgent

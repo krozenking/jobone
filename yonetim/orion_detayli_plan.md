@@ -43,7 +43,13 @@ graph LR
     B --> N{Kişilik}
     N --> O[persona.json]
     G --> P{Hata Yönetimi ve Loglama}
+    P --> Q[log_manager.py]
+    P --> R[database_manager.py]
 ```
+
+#### Not:  
+- `log_manager.py` ve `database_manager.py` hata yönetimi ve loglama için ayrı modüller olarak eklenmiştir.
+- Modüler mimari, her ana işlevin ayrı bir modül/dosya ile yönetilmesini sağlar.
 
 ## Tamamlanan Görevler
 
@@ -62,17 +68,15 @@ graph LR
 |---|---|---|---|---|
 | 2 | ✅ agent_interface.py ile agent çağrısı birleştir | Yüksek | 1 gün | Agent endpoint’lerini JSON’dan oku, çağır |
 | 3 | ✅ LLM görev yönlendirmesi (llm_router → runner) | Yüksek | 0.5 gün | Komut analiz edip görev olarak runner’a atama ve çoklu LLM seçimi |
-| 4 | 🧠 Küçük model eğitim sistemi için train_or_finetune.py taslağı | Orta | 1–2 gün | CPU modelleri için görev bazlı fine-tuning başlatıcı |
+| 4 | 🧠 train_or_finetune.py ile küçük model eğitimi | Orta | 1–2 gün | CPU modelleri için görev bazlı fine-tuning başlatıcı |
 | 5 | 🧪 mod ve persona seçeneklerini runner üzerinden kontrol et | Orta | 1 gün | Kullanıcı sistem modunu (normal, kaos vb.) belirleyebilsin |
 | 7 | 🧑‍💻 Görev geçmişini *.last dosyası gibi arşivle (JSON) | Orta | 1 gün | Görev detayları loglansın, tekrar kullanılabilir olsun |
 | 8 | 🧩 agent_endpoints.json yapılandırması oluştur | Düşük | 0.5 gün | Yeni agent’lar kolayca eklensin |
 | 9 | 🎛️ Task Manager UI için terminal tabanlı geçici arayüz | Düşük | 1 gün | Görevleri CLI'dan izlemek ve değiştirmek için |
 | 10 | 📊 Kaynak kullanım izleme (psutil / nvidia-smi wrapper) | Düşük | 1 gün | CPU/GPU yüküne göre görev/agent seçiminde yardımcı olur |
-| 6 | ✅ 🖼️ screen_agent.py için OCR eklentisi (Tesseract/EasyOCR) | Orta | 1 gün | Ekrandan yazı okuyabilmek için |
-| 6 | ✅ 🖼️ screen_agent.py için OCR eklentisi (Tesseract/EasyOCR) | Orta | 1 gün | Ekrandan yazı okuyabilmek için |
-| 8 | 🧩 agent_endpoints.json yapılandırması oluştur | Düşük | 0.5 gün | Yeni agent’lar kolayca eklensin |
-| 9 | 🎛️ Task Manager UI için terminal tabanlı geçici arayüz | Düşük | 1 gün | Görevleri CLI'dan izlemek ve değiştirmek için |
-| 10 | 📊 Kaynak kullanım izleme (psutil / nvidia-smi wrapper) | Düşük | 1 gün | CPU/GPU yüküne göre görev/agent seçiminde yardımcı olur |
+| 11 | 🗂️ Modüler klasör yapısına geçiş (aura_core_autonomous_modules/src/aura_core/modules/...) | Orta | 1 gün | Her ana işlev için ayrı modül klasörü oluştur |
+| 12 | 🛡️ log_manager.py ve database_manager.py ile merkezi loglama | Orta | 1 gün | Hata ve olay yönetimi için merkezi sistem |
+| 13 | 🧠 query_optimizer_agent.py ve ai_scheduler_agent.py entegrasyonu | Orta | 1 gün | Akıllı sorgu ve zamanlayıcı ajanları ekle |
 
 **Sprint Sonunda Hedeflenen Durum:**
 
@@ -82,6 +86,180 @@ graph LR
 * ✅ Ekran içeriği analiz edilebiliyor, OCR ile destekleniyor
 * ✅ Kullanıcı görevleri görebiliyor, yönlendirebiliyor
 * ✅ Sistem kaynak kullanımı bilinçli şekilde optimize ediliyor
+* ✅ Log ve hata yönetimi merkezi olarak izlenebiliyor
+* ✅ Modüler klasör yapısı ile yeni ajan/modül eklemek kolaylaşıyor
+
+## Modüler Dosya ve Klasör Yapısı (Özet)
+
+Aşağıdaki yapı, projenin sürdürülebilir ve genişletilebilir olmasını sağlar:
+
+```
+aura_core_autonomous_modules/
+├── src/
+│   └── aura_core/
+│       ├── common/
+│       ├── modules/
+│       │   ├── AgentManagerModule/
+│       │   │   ├── agent_interface.py
+│       │   │   ├── agent_endpoints.json
+│       │   ├── CognitiveAgentModule/
+│       │   │   ├── runner_service.py
+│       │   │   ├── ai_scheduler_agent.py
+│       │   │   ├── query_optimizer_agent.py
+│       │   ├── LLMIntegrationModule/
+│       │   │   ├── llm_router.py
+│       │   │   ├── train_or_finetune.py
+│       │   ├── UserInterfaceModule/
+│       │   │   ├── screen_agent.py
+│       │   │   ├── terminal_logger.py
+│       │   │   ├── streamlit_app.py
+│       │   ├── DataManagementModule/
+│       │   │   ├── log_manager.py
+│       │   │   ├── database_manager.py
+│       │   ├── ConfigModule/
+│       │   │   ├── config.py
+│       │   │   ├── config_manager.py
+│       │   ├── TaskManagerModule/
+│       │   │   ├── task_manager.py
+│       │   │   ├── scheduler.py
+│       │   ├── TrainerModule/
+│       │   │   ├── trainer.py
+│       └── core_app.py
+├── config/
+│   ├── persona.json
+│   ├── llm_config.json
+│   ├── continue.config.json
+├── data/
+│   ├── orion_memory_v2.json
+│   ├── *.last
+├── docs/
+├── scripts/
+├── tests/
+└── main.py
+```
+
+Her modül, kendi içinde servis, arayüz, konfigürasyon ve test dosyalarını barındırır.  
+Yeni ajanlar veya işlevler eklemek için ilgili modül klasörüne yeni bir alt klasör/dosya eklemek yeterlidir.
+
+## Dosya ve Klasörlerin Taşınması İçin Yol Haritası
+
+Aşağıdaki eşleştirmeye göre dosyalarınızı taşıyın ve yeniden adlandırın:
+
+```
+aura_core_autonomous_modules/
+├── src/
+│   └── aura_core/
+│       ├── common/
+│       ├── modules/
+│       │   ├── AgentManagerModule/
+│       │   │   ├── agent_interface.py
+│       │   │   ├── agent_endpoints.json
+│       │   ├── CognitiveAgentModule/
+│       │   │   ├── runner_service.py
+│       │   │   ├── ai_scheduler_agent.py
+│       │   │   ├── query_optimizer_agent.py
+│       │   ├── LLMIntegrationModule/
+│       │   │   ├── llm_router.py
+│       │   │   ├── train_or_finetune.py
+│       │   ├── UserInterfaceModule/
+│       │   │   ├── screen_agent.py
+│       │   │   ├── terminal_logger.py
+│       │   │   ├── streamlit_app.py
+│       │   ├── DataManagementModule/
+│       │   │   ├── log_manager.py
+│       │   │   ├── database_manager.py
+│       │   ├── ConfigModule/
+│       │   │   ├── config.py
+│       │   │   ├── config_manager.py
+│       │   ├── TaskManagerModule/
+│       │   │   ├── task_manager.py
+│       │   │   ├── scheduler.py
+│       │   ├── TrainerModule/
+│       │   │   ├── trainer.py
+│       └── core_app.py
+├── config/
+│   ├── persona.json
+│   ├── llm_config.json
+│   ├── continue.config.json
+├── data/
+│   ├── orion_memory_v2.json
+│   ├── *.last
+├── docs/
+├── scripts/
+├── tests/
+└── main.py
+```
+
+**Taşıma Önerileri:**
+Aşağıdaki terminal komutlarını kullanarak dosyalarınızı yeni mimariye uygun şekilde taşıyabilirsiniz:
+
+```sh
+# Ana klasörünüzde çalıştığınızı varsayalım (ör: aura_core_autonomous_modules/)
+
+# DataManagementModule
+mkdir -p src/aura_core/modules/DataManagementModule
+mv log_manager.py src/aura_core/modules/DataManagementModule/
+mv database_manager.py src/aura_core/modules/DataManagementModule/
+
+# LLMIntegrationModule
+mkdir -p src/aura_core/modules/LLMIntegrationModule
+mv llm_router.py src/aura_core/modules/LLMIntegrationModule/
+mv train_or_finetune.py src/aura_core/modules/LLMIntegrationModule/
+
+# CognitiveAgentModule
+mkdir -p src/aura_core/modules/CognitiveAgentModule
+mv runner_service.py src/aura_core/modules/CognitiveAgentModule/
+mv ai_scheduler_agent.py src/aura_core/modules/CognitiveAgentModule/
+mv query_optimizer_agent.py src/aura_core/modules/CognitiveAgentModule/
+
+# UserInterfaceModule
+mkdir -p src/aura_core/modules/UserInterfaceModule
+mv screen_agent.py src/aura_core/modules/UserInterfaceModule/
+mv terminal_logger.py src/aura_core/modules/UserInterfaceModule/
+mv streamlit_app.py src/aura_core/modules/UserInterfaceModule/
+
+# ConfigModule
+mkdir -p src/aura_core/modules/ConfigModule
+mv config.py src/aura_core/modules/ConfigModule/
+mv config_manager.py src/aura_core/modules/ConfigModule/
+
+# TaskManagerModule
+mkdir -p src/aura_core/modules/TaskManagerModule
+mv task_manager.py src/aura_core/modules/TaskManagerModule/
+mv scheduler.py src/aura_core/modules/TaskManagerModule/
+
+# TrainerModule
+mkdir -p src/aura_core/modules/TrainerModule
+mv trainer.py src/aura_core/modules/TrainerModule/
+
+# AgentManagerModule
+mkdir -p src/aura_core/modules/AgentManagerModule
+mv agent_interface.py src/aura_core/modules/AgentManagerModule/
+mv agent_endpoints.json src/aura_core/modules/AgentManagerModule/
+
+# Config ve data dosyaları
+mkdir -p config
+mv persona.json config/
+mv llm_config.json config/
+mv continue.config.json config/
+
+mkdir -p data
+mv orion_memory_v2.json data/
+mv *.last data/
+
+# Çekirdek ve ana dosya
+mv core_app.py src/aura_core/
+mv main.py .
+
+# Ortak, dokümantasyon, script ve test klasörleri
+mkdir -p src/aura_core/common
+mkdir -p docs
+mkdir -p scripts
+mkdir -p tests
+```
+
+Her dosyayı yukarıdaki yapıya uygun şekilde taşıyın.  
+Yeni dosya eklerken veya mevcut dosyaları taşırken, modül isimlendirmelerine ve klasör hiyerarşisine dikkat edin.
 
 ## Çevik Program Yönetimi, CI/CD, Risk Yönetimi ve Sürüm Yaşam Döngüsü Önerileri
 

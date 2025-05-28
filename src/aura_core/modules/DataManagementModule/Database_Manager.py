@@ -91,6 +91,11 @@ class DatabaseManager:
             print(f"Sorgu çalıştırma hatası: {e}")
             raise
 
+# TODO: Voice Agent (Text-to-speech, Bark/TTS) optimizasyonu ve entegrasyonu yapılacak.
+#       - Gerekirse yeni bir sınıf veya modül olarak ekleyin.
+#       - API veya CLI üzerinden erişim için fonksiyonlar ekleyin.
+#       - Testler ve hata yönetimi eklemeyi unutmayın.
+
 # Örnek Kullanım:
 if __name__ == '__main__':
     db_manager = DatabaseManager()
